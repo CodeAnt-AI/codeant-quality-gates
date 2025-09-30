@@ -1,5 +1,5 @@
-name: "CodeAnt CI Scan"
-description: "Runs CodeAnt CI security and code quality analysis on your GitHub repository"
+name: "CodeAnt Quality Gate Scan"
+description: "Runs CodeAnt CI quality gate scan with secret detection and code quality analysis on your GitHub repository"
 author: "CodeAnt AI"
 
 branding:
@@ -14,6 +14,14 @@ inputs:
     description: "Base URL for CodeAnt API (e.g., https://api.codeant.ai)"
     required: true
     default: "https://api.codeant.ai"
+  timeout:
+    description: "Maximum time in seconds to wait for quality gate results (default: 300)"
+    required: false
+    default: "300"
+  poll_interval:
+    description: "Time in seconds between polling attempts (default: 15)"
+    required: false
+    default: "15"
 
 runs:
   using: "composite"
@@ -21,41 +29,78 @@ runs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Fetch CodeAnt scan script
+    - name: Fetch quality gates script
       shell: bash
       env:
         API_BASE: ${{ inputs.api_base }}
       run: |
         set -e
-        echo "Fetching CodeAnt scan script from ${API_BASE}..."
-        if ! curl -fsSL -X GET "${API_BASE}/analysis/ci/scan/script/get" --output start_scan.sh.b64; then
-          echo "Error: Failed to fetch scan script from ${API_BASE}"
+        echo "Fetching quality gates script from ${API_BASE}..."
+        if ! curl -fsSL -X GET "${API_BASE}/analysis/ci/quality-gates/script/get" --output quality_gates.sh.b64; then
+          echo "Error: Failed to fetch quality gates script from ${API_BASE}"
           exit 1
         fi
-        echo "Successfully fetched scan script"
+        echo "Successfully fetched quality gates script"
 
-    - name: Prepare scan script
+    - name: Prepare quality gates script
       shell: bash
       run: |
         set -e
-        if ! base64 -d start_scan.sh.b64 > start_scan.sh; then
-          echo "Error: Failed to decode scan script"
+        if ! base64 -d quality_gates.sh.b64 > quality_gates.sh; then
+          echo "Error: Failed to decode quality gates script"
           exit 1
         fi
-        chmod +x start_scan.sh
-        echo "Scan script prepared successfully"
+        chmod +x quality_gates.sh
+        echo "Quality gates script prepared successfully"
 
-    - name: Run CodeAnt analysis
+    - name: Start Quality Gate Scan
       shell: bash
+      env:
+        ACCESS_TOKEN: ${{ inputs.access_token }}
+        REPO_NAME: ${{ github.repository }}
+        COMMIT_ID: ${{ github.sha }}
       run: |
         set -e
-        echo "Starting CodeAnt analysis..."
-        bash start_scan.sh \
-          -a "${{ inputs.access_token }}" \
-          -r "${{ github.repository }}" \
-          -c "${{ github.sha }}" \
-          -b "${{ github.ref_name }}" \
+        echo "Starting quality gate scan..."
+        ./quality_gates.sh \
+          -a "$ACCESS_TOKEN" \
+          -r "$REPO_NAME" \
+          -c "$COMMIT_ID" \
           -s github \
-          -i "" \
-          -e ""
-        echo "CodeAnt analysis completed"
+          -o start
+        echo "Quality gate scan initiated successfully"
+
+    - name: Poll for Quality Gate Results
+      shell: bash
+      env:
+        ACCESS_TOKEN: ${{ inputs.access_token }}
+        REPO_NAME: ${{ github.repository }}
+        COMMIT_ID: ${{ github.sha }}
+        TIMEOUT: ${{ inputs.timeout }}
+        POLL_INTERVAL: ${{ inputs.poll_interval }}
+      run: |
+        set -e
+        echo "Polling for quality gate results..."
+        echo "Timeout: ${TIMEOUT}s, Poll Interval: ${POLL_INTERVAL}s"
+        ./quality_gates.sh \
+          -a "$ACCESS_TOKEN" \
+          -r "$REPO_NAME" \
+          -c "$COMMIT_ID" \
+          -s github \
+          -o results \
+          -t "$TIMEOUT" \
+          -p "$POLL_INTERVAL"
+        echo "Quality gate results retrieved successfully"
+
+    - name: Quality Gate Status
+      if: always()
+      shell: bash
+      run: |
+        if [ "${{ job.status }}" = "success" ]; then
+          echo "✅ Quality Gate PASSED - No secrets detected"
+          echo "::notice title=Quality Gate::Quality gate passed successfully"
+        else
+          echo "❌ Quality Gate FAILED - Secrets detected or scan error"
+          echo "::error title=Quality Gate::Quality gate failed - please review the detected issues"
+          exit 1
+        fi

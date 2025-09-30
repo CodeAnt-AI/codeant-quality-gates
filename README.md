@@ -1,14 +1,16 @@
-# CodeAnt CI Scan Action
+# CodeAnt Quality Gate Scan Action
 
-This GitHub Action runs CodeAnt CI security and code quality analysis on your repository. It integrates seamlessly with your CI/CD pipeline to provide automated code scanning and security insights.
+This GitHub Action runs CodeAnt CI quality gate scan with secret detection and code quality analysis on your repository. It integrates seamlessly with your CI/CD pipeline to provide automated scanning and will fail your workflow if secrets are detected or quality gates fail.
 
 ## Features
 
-- 🔒 Security vulnerability detection
-- 📊 Code quality analysis
+- 🔒 Secret detection and security scanning
+- 📊 Code quality gate enforcement
 - 🚀 Fast and efficient scanning
 - 🔄 Seamless CI/CD integration
 - 📈 Detailed reports and insights
+- ⏱️ Configurable polling and timeout
+- ✅ Pass/Fail workflow status based on scan results
 
 ## Inputs
 
@@ -16,6 +18,8 @@ This GitHub Action runs CodeAnt CI security and code quality analysis on your re
 |---------------|--------------------------------------------------|----------|--------------------------|
 | access_token  | GitHub PAT or repository token for authentication | Yes      | -                        |
 | api_base      | Base URL for CodeAnt API                         | No       | https://api.codeant.ai   |
+| timeout       | Maximum time in seconds to wait for results      | No       | 300                      |
+| poll_interval | Time in seconds between polling attempts         | No       | 15                       |
 
 ## Usage
 
@@ -40,14 +44,41 @@ jobs:
           access_token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-### Custom API Base URL
+### With Custom Configuration
 
 ```yaml
-- name: Run CodeAnt Scan
+- name: Run CodeAnt Quality Gate Scan
   uses: CodeAnt-AI/codeant-ci-scan@v1
   with:
     access_token: ${{ secrets.ACCESS_TOKEN_GITHUB }}
-    api_base: https://custom.codeant.ai
+    api_base: https://api.codeant.ai
+    timeout: 600           # Wait up to 10 minutes for results
+    poll_interval: 20      # Poll every 20 seconds
+```
+
+### Complete Workflow Example
+
+```yaml
+name: CodeAnt Quality Gate
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  quality-gate:
+    name: Quality Gate Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run CodeAnt Quality Gate Scan
+        uses: CodeAnt-AI/codeant-ci-scan@v1
+        with:
+          access_token: ${{ secrets.GITHUB_TOKEN }}
+          api_base: https://api.codeant.ai
+          timeout: 300
+          poll_interval: 15
 ```
 
 ## Testing from Another Repository
@@ -71,6 +102,28 @@ uses: CodeAnt-AI/codeant-ci-scan@feature-branch
 # or
 uses: CodeAnt-AI/codeant-ci-scan@abc1234  # commit SHA
 ```
+
+## How It Works
+
+1. **Checkout**: Checks out your repository code
+2. **Fetch Script**: Downloads the quality gates scanning script from CodeAnt API
+3. **Start Scan**: Initiates the quality gate scan on CodeAnt servers
+4. **Poll Results**: Continuously polls for scan results until completion or timeout
+5. **Report Status**: Reports pass/fail status with GitHub annotations
+
+## Expected Output
+
+### When Quality Gate Passes:
+```
+✅ Quality Gate PASSED - No secrets detected
+```
+The workflow continues successfully.
+
+### When Quality Gate Fails:
+```
+❌ Quality Gate FAILED - Secrets detected or scan error
+```
+The workflow fails, preventing merge/deployment.
 
 ## Required Permissions
 
