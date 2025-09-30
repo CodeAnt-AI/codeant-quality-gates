@@ -146,4 +146,4 @@ For issues, questions, or contributions, please visit the [GitHub repository](ht
 
 ## License
 
-[Add your license here]
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
