@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run CodeAnt Scan
-        uses: your-username/codeant-ci-scan@v1
+        uses: CodeAnt-AI/codeant-ci-scan@v1
         with:
           access_token: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -44,7 +44,7 @@ jobs:
 
 ```yaml
 - name: Run CodeAnt Scan
-  uses: your-username/codeant-ci-scan@v1
+  uses: CodeAnt-AI/codeant-ci-scan@v1
   with:
     access_token: ${{ secrets.ACCESS_TOKEN_GITHUB }}
     api_base: https://custom.codeant.ai
@@ -54,22 +54,22 @@ jobs:
 
 To test this action before publishing to the GitHub Marketplace:
 
-1. **Push this action to a GitHub repository** (e.g., `your-username/codeant-ci-scan`)
+1. **Push this action to a GitHub repository** (e.g., `CodeAnt-AI/codeant-ci-scan`)
 
 2. **In another repository**, reference it using the repository path:
 
 ```yaml
 - name: Test CodeAnt Scan
-  uses: your-username/codeant-ci-scan@main  # or use a specific branch/tag
+  uses: CodeAnt-AI/codeant-ci-scan@main  # or use a specific branch/tag
   with:
     access_token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 3. **For testing specific commits or branches:**
 ```yaml
-uses: your-username/codeant-ci-scan@feature-branch
+uses: CodeAnt-AI/codeant-ci-scan@feature-branch
 # or
-uses: your-username/codeant-ci-scan@abc1234  # commit SHA
+uses: CodeAnt-AI/codeant-ci-scan@abc1234  # commit SHA
 ```
 
 ## Required Permissions
@@ -89,7 +89,7 @@ Before publishing:
 
 ## Support
 
-For issues, questions, or contributions, please visit the [GitHub repository](https://github.com/your-username/codeant-ci-scan).
+For issues, questions, or contributions, please visit the [GitHub repository](https://github.com/CodeAnt-AI/codeant-ci-scan).
 
 ## License
 
