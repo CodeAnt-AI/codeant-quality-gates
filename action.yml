@@ -1,0 +1,61 @@
+name: "CodeAnt CI Scan"
+description: "Runs CodeAnt CI security and code quality analysis on your GitHub repository"
+author: "CodeAnt AI"
+
+branding:
+  icon: "shield"
+  color: "blue"
+
+inputs:
+  access_token:
+    description: "GitHub PAT or repository token for authentication"
+    required: true
+  api_base:
+    description: "Base URL for CodeAnt API (e.g., https://api.codeant.ai)"
+    required: true
+    default: "https://api.codeant.ai"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Fetch CodeAnt scan script
+      shell: bash
+      env:
+        API_BASE: ${{ inputs.api_base }}
+      run: |
+        set -e
+        echo "Fetching CodeAnt scan script from ${API_BASE}..."
+        if ! curl -fsSL -X GET "${API_BASE}/analysis/ci/scan/script/get" --output start_scan.sh.b64; then
+          echo "Error: Failed to fetch scan script from ${API_BASE}"
+          exit 1
+        fi
+        echo "Successfully fetched scan script"
+
+    - name: Prepare scan script
+      shell: bash
+      run: |
+        set -e
+        if ! base64 -d start_scan.sh.b64 > start_scan.sh; then
+          echo "Error: Failed to decode scan script"
+          exit 1
+        fi
+        chmod +x start_scan.sh
+        echo "Scan script prepared successfully"
+
+    - name: Run CodeAnt analysis
+      shell: bash
+      run: |
+        set -e
+        echo "Starting CodeAnt analysis..."
+        bash start_scan.sh \
+          -a "${{ inputs.access_token }}" \
+          -r "${{ github.repository }}" \
+          -c "${{ github.sha }}" \
+          -b "${{ github.ref_name }}" \
+          -s github \
+          -i "" \
+          -e ""
+        echo "CodeAnt analysis completed"
