@@ -26,7 +26,7 @@ This GitHub Action runs CodeAnt CI quality gate scan with secret detection and c
 ### Basic Example
 
 ```yaml
-name: CodeAnt CI Scan
+name: CODEANT QUALITY GATE SCAN
 
 on:
   push:
@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run CodeAnt Scan
-        uses: CodeAnt-AI/codeant-ci-scan@v1
+        uses: CodeAnt-AI/codeant-quality-gates@v0.0.2
         with:
           access_token: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -48,7 +48,7 @@ jobs:
 
 ```yaml
 - name: Run CodeAnt Quality Gate Scan
-  uses: CodeAnt-AI/codeant-ci-scan@v1
+  uses: CodeAnt-AI/codeant-quality-gates@v0.0.2
   with:
     access_token: ${{ secrets.ACCESS_TOKEN_GITHUB }}
     api_base: https://api.codeant.ai
@@ -73,7 +73,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run CodeAnt Quality Gate Scan
-        uses: CodeAnt-AI/codeant-ci-scan@v1
+        uses: CodeAnt-AI/codeant-quality-gates@v0.0.2
         with:
           access_token: ${{ secrets.GITHUB_TOKEN }}
           api_base: https://api.codeant.ai
@@ -85,22 +85,22 @@ jobs:
 
 To test this action before publishing to the GitHub Marketplace:
 
-1. **Push this action to a GitHub repository** (e.g., `CodeAnt-AI/codeant-ci-scan`)
+1. **Push this action to a GitHub repository** (e.g., `CodeAnt-AI/codeant-quality-gates`)
 
 2. **In another repository**, reference it using the repository path:
 
 ```yaml
 - name: Test CodeAnt Scan
-  uses: CodeAnt-AI/codeant-ci-scan@main  # or use a specific branch/tag
+  uses: CodeAnt-AI/codeant-quality-gates@main  # or use a specific branch/tag
   with:
     access_token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 3. **For testing specific commits or branches:**
 ```yaml
-uses: CodeAnt-AI/codeant-ci-scan@feature-branch
+uses: CodeAnt-AI/codeant-quality-gates@feature-branch
 # or
-uses: CodeAnt-AI/codeant-ci-scan@abc1234  # commit SHA
+uses: CodeAnt-AI/codeant-quality-gates@abc1234  # commit SHA
 ```
 
 ## How It Works
@@ -142,7 +142,7 @@ Before publishing:
 
 ## Support
 
-For issues, questions, or contributions, please visit the [GitHub repository](https://github.com/CodeAnt-AI/codeant-ci-scan).
+For issues, questions, or contributions, please visit the [GitHub repository](https://github.com/CodeAnt-AI/codeant-quality-gates).
 
 ## License
 

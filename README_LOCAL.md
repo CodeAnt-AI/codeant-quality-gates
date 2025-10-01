@@ -1,6 +1,6 @@
 # GitHub Action Development - Best Practices Used
 
-This document outlines the best practices we implemented while creating the CodeAnt CI Scan GitHub Action.
+This document outlines the best practices we implemented while creating the CODEANT QUALITY GATE SCAN GitHub Action.
 
 ## 1. Action Metadata (action.yml)
 
@@ -93,7 +93,7 @@ This document outlines the best practices we implemented while creating the Code
 
 ### ✅ Clean Repository Structure
 ```
-codeant-ci-scan/
+codeant-quality-gates/
 ├── action.yml          # Action definition
 ├── README.md           # User documentation
 ├── README_LOCAL.md     # Development documentation
