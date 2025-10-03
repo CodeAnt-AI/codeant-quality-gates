@@ -48,7 +48,10 @@ runs:
         API_BASE: ${{ inputs.api_base }}
       run: |
         set -e
-        if [ "$API_BASE" = "https://api.codeant.ai" ]; then
+        echo "API_BASE value: '${API_BASE}'"
+        # Remove trailing slash if present for comparison
+        API_BASE_CLEAN="${API_BASE%/}"
+        if [[ "$API_BASE_CLEAN" == "https://api.codeant.ai" ]]; then
           echo "Decoding base64 encoded script..."
           if ! base64 -d quality_gates.sh.b64 > quality_gates.sh; then
             echo "Error: Failed to decode quality gates script"
