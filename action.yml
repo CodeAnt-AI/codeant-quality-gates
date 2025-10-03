@@ -46,9 +46,15 @@ runs:
       shell: bash
       run: |
         set -e
-        if ! base64 -d quality_gates.sh.b64 > quality_gates.sh; then
-          echo "Error: Failed to decode quality gates script"
-          exit 1
+        if [ "$API_BASE" = "https://api.codeant.ai" ]; then
+          echo "Decoding base64 encoded script..."
+          if ! base64 -d quality_gates.sh.b64 > quality_gates.sh; then
+            echo "Error: Failed to decode quality gates script"
+            exit 1
+          fi
+        else
+          echo "Using script without base64 decoding..."
+          mv quality_gates.sh.b64 quality_gates.sh
         fi
         chmod +x quality_gates.sh
         echo "Quality gates script prepared successfully"
