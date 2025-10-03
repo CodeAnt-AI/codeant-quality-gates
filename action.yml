@@ -48,7 +48,6 @@ runs:
         API_BASE: ${{ inputs.api_base }}
       run: |
         set -e
-        echo "API_BASE value: '${API_BASE}'"
         # Remove trailing slash if present for comparison
         API_BASE_CLEAN="${API_BASE%/}"
         echo "API_BASE_CLEAN=$API_BASE_CLEAN"
