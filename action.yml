@@ -44,6 +44,8 @@ runs:
 
     - name: Prepare quality gates script
       shell: bash
+      env:
+        API_BASE: ${{ inputs.api_base }}
       run: |
         set -e
         if [ "$API_BASE" = "https://api.codeant.ai" ]; then
