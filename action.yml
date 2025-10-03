@@ -51,6 +51,8 @@ runs:
         echo "API_BASE value: '${API_BASE}'"
         # Remove trailing slash if present for comparison
         API_BASE_CLEAN="${API_BASE%/}"
+        echo "API_BASE_CLEAN=$API_BASE_CLEAN"
+        
         if [[ "$API_BASE_CLEAN" == "https://api.codeant.ai" ]]; then
           echo "Decoding base64 encoded script..."
           if ! base64 -d quality_gates.sh.b64 > quality_gates.sh; then
