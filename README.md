@@ -41,7 +41,7 @@ jobs:
       - name: Run CodeAnt Scan
         uses: CodeAnt-AI/codeant-quality-gates@v0.0.2
         with:
-          access_token: ${{ secrets.GITHUB_TOKEN }}
+          access_token: ${{ secrets.ACCESS_TOKEN_GITHUB }}
 ```
 
 ### With Custom Configuration
@@ -75,7 +75,7 @@ jobs:
       - name: Run CodeAnt Quality Gate Scan
         uses: CodeAnt-AI/codeant-quality-gates@v0.0.2
         with:
-          access_token: ${{ secrets.GITHUB_TOKEN }}
+          access_token: ${{ secrets.ACCESS_TOKEN_GITHUB }}
           api_base: https://api.codeant.ai
           timeout: 300
           poll_interval: 15
@@ -93,7 +93,7 @@ To test this action before publishing to the GitHub Marketplace:
 - name: Test CodeAnt Scan
   uses: CodeAnt-AI/codeant-quality-gates@main  # or use a specific branch/tag
   with:
-    access_token: ${{ secrets.GITHUB_TOKEN }}
+    access_token: ${{ secrets.ACCESS_TOKEN_GITHUB }}
 ```
 
 3. **For testing specific commits or branches:**
