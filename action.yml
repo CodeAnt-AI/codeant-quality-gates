@@ -70,7 +70,7 @@ runs:
       env:
         ACCESS_TOKEN: ${{ inputs.access_token }}
         REPO_NAME: ${{ github.repository }}
-        COMMIT_ID: ${{ github.sha }}
+        COMMIT_ID: ${{ github.event.pull_request.head.sha || github.sha }}
       run: |
         set -e
         echo "Starting quality gate scan..."
@@ -87,7 +87,7 @@ runs:
       env:
         ACCESS_TOKEN: ${{ inputs.access_token }}
         REPO_NAME: ${{ github.repository }}
-        COMMIT_ID: ${{ github.sha }}
+        COMMIT_ID: ${{ github.event.pull_request.head.sha || github.sha }}
         TIMEOUT: ${{ inputs.timeout }}
         POLL_INTERVAL: ${{ inputs.poll_interval }}
       run: |
