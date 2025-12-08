@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run CodeAnt Scan
-        uses: CodeAnt-AI/codeant-quality-gates@v0.0.2
+        uses: CodeAnt-AI/codeant-quality-gates@v0.0.5
         with:
           access_token: ${{ secrets.ACCESS_TOKEN_GITHUB }}
 ```
@@ -48,7 +48,7 @@ jobs:
 
 ```yaml
 - name: Run CodeAnt Quality Gate Scan
-  uses: CodeAnt-AI/codeant-quality-gates@v0.0.2
+  uses: CodeAnt-AI/codeant-quality-gates@v0.0.5
   with:
     access_token: ${{ secrets.ACCESS_TOKEN_GITHUB }}
     api_base: https://api.codeant.ai
@@ -73,7 +73,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run CodeAnt Quality Gate Scan
-        uses: CodeAnt-AI/codeant-quality-gates@v0.0.2
+        uses: CodeAnt-AI/codeant-quality-gates@v0.0.5
         with:
           access_token: ${{ secrets.ACCESS_TOKEN_GITHUB }}
           api_base: https://api.codeant.ai
