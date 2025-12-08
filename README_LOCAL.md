@@ -184,10 +184,10 @@ Users should know how to test before publishing
 
 ### ✅ Context Variables
 ```yaml
-${{ github.repository }}    # Current repository
-${{ github.sha }}           # Commit SHA
-${{ github.ref_name }}      # Branch/tag name
-${{ secrets.GITHUB_TOKEN }} # Auto-generated token
+${{ github.repository }}                      # Current repository
+${{ github.event.pull_request.head.sha }}     # Pull request head commit SHA
+${{ github.ref_name }}                        # Branch/tag name
+${{ secrets.GITHUB_TOKEN }}                   # Auto-generated token
 ```
 
 ### ✅ Environment Variables
