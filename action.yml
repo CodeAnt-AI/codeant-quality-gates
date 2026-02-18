@@ -109,7 +109,7 @@ runs:
       shell: bash
       run: |
         if [ "${{ job.status }}" = "success" ]; then
-          echo "✅ Quality Gate PASSED - No secrets detected"
+          echo "✅ Quality Gate PASSED - No secrets detected "
           echo "::notice title=Quality Gate::Quality gate passed successfully"
         else
           echo "❌ Quality Gate FAILED - Secrets detected or scan error"
